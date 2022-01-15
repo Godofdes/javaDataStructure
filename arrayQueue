@@ -1,0 +1,137 @@
+package com.txy.queue;
+
+import java.util.Scanner;
+
+
+public class ArrayQueueDemo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayQueue arrayQueue = new ArrayQueue(4);
+		System.out.println("queue");
+		char key = ' ';//接收输入
+		Scanner scanner = new Scanner(System.in);
+		boolean loop = true;
+		while(loop) {
+			key = scanner.next().charAt(0);
+			switch (key) {
+			case 's':
+				arrayQueue.queueShow();
+				break;
+			case 'e':
+				scanner.close();
+				loop = false;
+				break;
+			case 'a':
+				int value = scanner.nextInt();
+				arrayQueue.addQueue(value);
+				break;
+			case 'g':
+				try {
+					int getValue = arrayQueue.getQueue();
+					System.out.printf("%d\n",getValue);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+			case 'h':
+				try {
+					int headValue = arrayQueue.showQueueHead();
+					System.out.printf("%d\n",headValue);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+
+class ArrayQueue{
+	private int maxSize;
+	private int front;
+	private int rear;
+	private int[] arr;
+	
+	//创建队列
+	public ArrayQueue(int arrMaxSize){
+		maxSize = arrMaxSize + 1;
+		front = 0;//指向第一个数据前一个位置
+		rear = 0;//指向队尾，最后一个数据
+		arr = new int[maxSize];
+	}
+	
+	//判断队满
+	public boolean isQueueFull() {
+		if(rear > front) {
+			return (rear - front) == (maxSize - 1);
+		}else if(rear < front){
+			return (rear + 1 - front) == 0;
+		}
+		else return false;
+	}
+	
+	public boolean isQueueEmpty() {
+		return front == rear;
+	}
+	
+	public void addQueue(int num) {
+		if(!isQueueFull()) {
+			if(rear < maxSize - 1) {
+				rear++;
+			}
+			else {
+				rear = 0;
+			}
+			arr[rear] = num;
+		}
+		else {
+			System.out.println("队列满");
+			return ;
+		}
+	}
+	
+	public int getQueue() {
+		if(!isQueueEmpty()) {
+			if(front < maxSize-1) {
+				front++;
+			}
+			else {
+				front = 0;
+			}
+			return arr[front];
+		}
+		else {
+			throw new RuntimeException("队列空");
+		}
+	}
+	
+	public void queueShow() {
+		if(!isQueueEmpty()) {
+			int temp = front + 1;
+			while(temp != rear) {
+				System.out.printf("arr[%d] = %d\n", temp, arr[temp]);
+				if(temp < maxSize-1) {
+					temp++;
+				}
+				else {
+					temp = 0;
+				}
+			}
+			System.out.printf("arr[%d] = %d\n", rear, arr[rear]);
+		}
+	}
+	
+	public int showQueueHead() {
+		if(!isQueueEmpty()) {
+			return arr[front+1];
+		}
+		else {
+			throw new RuntimeException("队列空");
+		}
+	}
+	
+	
+}
