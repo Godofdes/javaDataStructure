@@ -1,0 +1,209 @@
+package com.txy.linkedlist;
+
+import java.util.Stack;
+
+public class SingleLinkedList {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		HeroNode hero1 = new HeroNode(1, "song", "ss");
+		HeroNode hero2 = new HeroNode(2, "lin", "ll");
+		HeroNode hero3 = new HeroNode(3, "wu", "ji");
+		HeroNode hero4 = new HeroNode(4, "lu", "bao");
+		
+		SingleLinkedListManager singleLinkedListManager = new SingleLinkedListManager();
+		
+		singleLinkedListManager.addNode(hero1);
+		singleLinkedListManager.addNode(hero2);
+		singleLinkedListManager.addNode(hero3);
+		singleLinkedListManager.addNode(hero4);
+		
+		singleLinkedListManager.showList();
+		
+		singleLinkedListManager.listReverse();
+		singleLinkedListManager.showList();
+		singleLinkedListManager.reversePrint(singleLinkedListManager.getHeadNode());
+	}
+
+}
+
+class SingleLinkedListManager{
+	//初始化一个头节点
+	private HeroNode headHeroNode = new HeroNode(0, "", "");
+	
+	
+	public HeroNode getHeadNode() {
+		return headHeroNode;
+	}
+	//添加节点
+	public void addNode(HeroNode heroNode) {
+		HeroNode temp = headHeroNode;
+		while(temp.next!=null) {
+			temp = temp.next;
+		}
+		temp.next = heroNode;
+	}
+	
+	//按顺序添加节点
+	public void addByOrder(HeroNode heroNode) {
+		HeroNode temp = headHeroNode;
+		while(temp.next != null) {
+			temp = temp.next;
+			if((heroNode.num > temp.num)&&(heroNode.num < temp.next.num)) {
+				heroNode.next = temp.next;
+				temp.next = heroNode;
+				break;
+			}
+			else if(heroNode.num == temp.num) {
+				System.out.println("插入失败！");
+				break;
+			}
+		}
+	}
+	
+	//修改节点
+	public void update(HeroNode heroNode) {
+		if(headHeroNode.next == null) {
+			System.out.println("链表为空");
+			return ;
+		}
+		
+		HeroNode temp = headHeroNode.next;
+		boolean flag = false;
+		
+		while(temp.next!=null) {
+			if(temp.num == heroNode.num) {
+				flag = true;
+				temp.name = heroNode.name;
+				temp.nickname = heroNode.nickname;
+			}
+			temp = temp.next;
+		}
+		if(!flag) {
+			System.out.println("未找到相关节点！");
+		}
+	}
+	
+	//删除
+	public void delete(int no) {
+		if(headHeroNode.next == null) {
+			System.out.println("链表为空");
+			return ;
+		}
+		
+		HeroNode temp = headHeroNode.next;
+		boolean flag = false;
+		
+		while(temp.next!=null) {
+			if(temp.next.num == no) {
+				flag = true;
+				temp.next = temp.next.next;
+			}
+			temp = temp.next;
+		}
+		if(!flag) {
+			System.out.println("未找到相关节点！");
+		}
+	}
+	//遍历
+	public void showList() {
+		HeroNode temp = headHeroNode;
+		if(headHeroNode.next == null) {
+			System.out.println("链表为空");
+			return;
+		}
+		while(temp.next != null) {
+			temp = temp.next;
+			System.out.println(temp);
+		}
+	}
+
+
+ //记录个数
+	public int countNum() {
+		HeroNode temp = headHeroNode;
+		int count = 0;
+		while(temp.next != null) {
+			temp = temp.next;
+			count ++;
+		}
+		return count;
+	}
+	//找某个节点
+	public  HeroNode findNodeFromBack(int no) {
+		HeroNode temp1 = headHeroNode;
+		HeroNode temp2 = headHeroNode;
+		int count = 0;
+		boolean flag = false;
+		
+		while(temp1.next != null) {
+			temp1 = temp1.next;
+			count ++;
+		}
+		if(no > count) {
+			System.out.println("input error");
+			return null;
+		}
+		while(temp2.next != null) {
+			if(temp2.num == (count + 1 - no)) {
+				flag = true;
+				return temp2;
+			}
+			temp2 = temp2.next;
+		}
+		if(!flag) {
+			System.out.println("未找到！");
+			return null;
+		}
+		return null;
+	}
+	
+	//链表反转
+	public void listReverse() {
+		HeroNode temp = headHeroNode.next;
+		HeroNode reverseHead = new HeroNode(0, "", "");
+		HeroNode temp3 = null;
+		
+		while(temp!= null) {
+			temp3 = temp.next;
+			temp.next = reverseHead.next;
+			reverseHead.next = temp;
+			temp = temp3;
+		}
+		headHeroNode.next = reverseHead.next;
+	}
+	
+	//反向遍历
+	public static void reversePrint(HeroNode head) {
+		if(head.next == null) {
+			return;
+		}
+		Stack<HeroNode> stack = new Stack<HeroNode>();
+		HeroNode curHeroNode = head.next;
+		while(curHeroNode != null) {
+			stack.push(curHeroNode);
+			curHeroNode = curHeroNode.next;
+		}
+		while(stack.size()!=0) {
+			System.out.println(stack.pop());
+		}
+	}
+
+}
+
+class HeroNode{
+	public int num;
+	public String name;
+	public String nickname;
+	HeroNode next;
+	
+	public HeroNode(int Hnum, String Hname, String Hnickname) {
+		this.num = Hnum;
+		this.name = Hname;
+		this.nickname = Hnickname;
+	}
+	@Override
+	public String toString() {
+		return "HeroNode = [num = " + num + ", name = " + name + ", nickname = " + nickname + "]";
+	}
+}
